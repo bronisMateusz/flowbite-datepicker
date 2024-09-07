@@ -142,7 +142,6 @@ export default class Datepicker {
     }, processOptions(defaultOptions, this));
     this._options = options;
     Object.assign(config, processOptions(options, this));
-
     // configure by type
     const inline = this.inline = element.tagName !== 'INPUT';
     let inputField;

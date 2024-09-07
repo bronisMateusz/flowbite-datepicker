@@ -102,6 +102,13 @@ const defaultOptions = {
   todayHighlight: false,
   updateOnBlur: true,
   weekStart: 0,
+  eventData: [
+    {date: new Date(today).setDate(5), color: '#f0f0f0'},
+    {date: new Date(today).setDate(5), color: '#a0a0a0'},
+    {date: new Date(today).setDate(10), color: '#f0f0f0'},
+    {date: new Date(today).setDate(10), color: '#a0a0a0'},
+    {date: new Date(today).setDate(15), color: '#001232'},
+  ],
 };
 const languages = {
   'ar-tn': 'Arabic-Tunisia',
@@ -198,11 +205,13 @@ function getBeforeShowFnSrc(name) {
 }
 
 function switchPicker(type) {
-  const options = buttonClass ? {buttonClass} : {};
+  const options = buttonClass ? {buttonClass} : {}; 
+  console.log(options);
   if (window.demoPicker) {
     const currentOpts = window.demoPicker instanceof DateRangePicker
       ? window.demoPicker.datepickers[0]._options
       : window.demoPicker._options;
+    console.log(currentOpts);
     Object.keys(defaultOptions).reduce((opts, key) => {
       if (key in currentOpts && String(currentOpts[key] !== String(defaultOptions[key]))) {
         opts[key] = currentOpts[key];
@@ -216,6 +225,7 @@ function switchPicker(type) {
   sandbox.appendChild(parseHTML(templates[type]));
 
   const el = sandbox.querySelector('.date');
+  console.log(options);
   window.demoPicker = type === 'range'
     ? new DateRangePicker(el, options)
     : new Datepicker(el, options);
@@ -234,7 +244,16 @@ const refreshOptionForm = function refreshOptionForm() {
   const configDefaults = {
     minDate: new Date(today).setFullYear(0, 0, 1),
     maxDate: undefined,
+    eventData: [
+      {date: new Date(today).setDate(5), color: '#f0f0f0'},
+      {date: new Date(today).setDate(5), color: '#a0a0a0'},
+      {date: new Date(today).setDate(10), color: '#f0f0f0'},
+      {date: new Date(today).setDate(10), color: '#a0a0a0'},
+      {date: new Date(today).setDate(15), color: '#001232'},
+    ],
   };
+
+  console.log(eventData);
   const formElemByName = name => optsForm.querySelector(`[name="${name}"]`);
   const formatDate = val => Datepicker.formatDate(val, config.format, config.lang);
 

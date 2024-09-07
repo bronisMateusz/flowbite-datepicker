@@ -151,9 +151,40 @@ export default class DaysView extends View {
       const date = new Date(current);
       const day = date.getDay();
 
-      el.className = `datepicker-cell hover:bg-gray-100 dark:hover:bg-gray-600 block flex-1 leading-9 border-0 rounded-lg cursor-pointer text-center text-gray-900 dark:text-white font-semibold text-sm ${this.cellClass}`;
+      el.className = `datepicker-cell hover:bg-gray-100 dark:hover:bg-gray-600 flex flex-col flex-1 border-0 rounded-lg cursor-pointer text-center text-gray-900 dark:text-white font-semibold text-sm ${this.cellClass}`;
       el.dataset.date = current;
-      el.textContent = date.getDate();
+
+      let dayElement = el.querySelector('.day-number');
+      if (!dayElement) {
+        dayElement = document.createElement('span');
+        dayElement.classList.add('day-number', 'leading-8');
+        el.appendChild(dayElement);
+      }
+      dayElement.textContent = date.getDate();
+
+      let eventWrapper = el.querySelector('.day-events');
+      if (!eventWrapper) {
+        eventWrapper = document.createElement('span');
+        eventWrapper.classList.add('day-events', 'opacity-60', 'gap-0.5', 'flex', 'flex-row', 'justify-center', 'align-center', 'h-2.5');
+        el.appendChild(eventWrapper);
+      }
+      else {
+        eventWrapper.innerHTML = '';
+      }
+      // Random 1 - 10 
+      // If there is nuber below 3 add textContent 'x';
+      const random = Math.floor(Math.random() * 10) + 1;
+      if (random < 3) {
+        let eventTag1 = document.createElement('span');
+        eventTag1.classList.add('w-1.5', 'h-1.5', 'bg-red-800', 'rounded-3xl');
+        eventWrapper.appendChild(eventTag1);
+        let eventTag2 = document.createElement('span');
+        eventTag2.classList.add('w-1.5', 'h-1.5', 'bg-blue-800', 'rounded-3xl');
+        eventWrapper.appendChild(eventTag2);
+        let eventTag3 = document.createElement('span');
+        eventTag3.classList.add('w-1.5', 'h-1.5', 'bg-green-800', 'rounded-3xl');
+        eventWrapper.appendChild(eventTag3);
+      }
 
       if (current < this.first) {
         classList.add('prev', 'text-gray-500', 'dark:text-white');

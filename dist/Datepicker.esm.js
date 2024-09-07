@@ -585,7 +585,8 @@ var defaultOptions = {
   todayBtnMode: 0,
   todayHighlight: false,
   updateOnBlur: true,
-  weekStart: 0
+  weekStart: 0,
+  eventData: []
 };
 
 var range = document.createRange();
@@ -885,8 +886,8 @@ var pickerTemplate = optimizeTemplateHTML("<div class=\"datepicker hidden\">\n  
 
 var daysTemplate = optimizeTemplateHTML("<div class=\"days\">\n  <div class=\"days-of-week grid grid-cols-7 mb-1\">".concat(createTagRepeat('span', 7, {
   "class": 'dow block flex-1 leading-9 border-0 rounded-lg cursor-default text-center text-gray-900 font-semibold text-sm'
-}), "</div>\n  <div class=\"datepicker-grid w-64 grid grid-cols-7\">").concat(createTagRepeat('span', 42, {
-  "class": 'block flex-1 leading-9 border-0 rounded-lg cursor-default text-center text-gray-900 font-semibold text-sm h-6 leading-6 text-sm font-medium text-gray-500 dark:text-gray-400'
+}), "</div>\n  <div class=\"datepicker-grid w-64 grid grid-cols-7\">").concat(createTagRepeat('div', 42, {
+  "class": 'flex-1 leading-9 border-0 rounded-lg cursor-default text-center text-gray-900 font-semibold text-sm h-6 leading-6 text-sm font-medium text-gray-500 dark:text-gray-400'
 }), "</div>\n</div>"));
 
 var calendarWeeksTemplate = optimizeTemplateHTML("<div class=\"calendar-weeks\">\n  <div class=\"days-of-week flex\"><span class=\"dow h-6 leading-6 text-sm font-medium text-gray-500 dark:text-gray-400\"></span></div>\n  <div class=\"weeks\">".concat(createTagRepeat('span', 6, {
@@ -1107,9 +1108,37 @@ var DaysView = /*#__PURE__*/function (_View) {
         var current = addDays(_this2.start, index);
         var date = new Date(current);
         var day = date.getDay();
-        el.className = "datepicker-cell hover:bg-gray-100 dark:hover:bg-gray-600 block flex-1 leading-9 border-0 rounded-lg cursor-pointer text-center text-gray-900 dark:text-white font-semibold text-sm ".concat(_this2.cellClass);
+        el.className = "datepicker-cell hover:bg-gray-100 dark:hover:bg-gray-600 flex flex-col flex-1 border-0 rounded-lg cursor-pointer text-center text-gray-900 dark:text-white font-semibold text-sm ".concat(_this2.cellClass);
         el.dataset.date = current;
-        el.textContent = date.getDate();
+        var dayElement = el.querySelector('.day-number');
+        if (!dayElement) {
+          dayElement = document.createElement('span');
+          dayElement.classList.add('day-number', 'leading-8');
+          el.appendChild(dayElement);
+        }
+        dayElement.textContent = date.getDate();
+        var eventWrapper = el.querySelector('.day-events');
+        if (!eventWrapper) {
+          eventWrapper = document.createElement('span');
+          eventWrapper.classList.add('day-events', 'opacity-60', 'gap-0.5', 'flex', 'flex-row', 'justify-center', 'align-center', 'h-2.5');
+          el.appendChild(eventWrapper);
+        } else {
+          eventWrapper.innerHTML = '';
+        }
+        // Random 1 - 10 
+        // If there is nuber below 3 add textContent 'x';
+        var random = Math.floor(Math.random() * 10) + 1;
+        if (random < 3) {
+          var eventTag1 = document.createElement('span');
+          eventTag1.classList.add('w-1.5', 'h-1.5', 'bg-red-800', 'rounded-3xl');
+          eventWrapper.appendChild(eventTag1);
+          var eventTag2 = document.createElement('span');
+          eventTag2.classList.add('w-1.5', 'h-1.5', 'bg-blue-800', 'rounded-3xl');
+          eventWrapper.appendChild(eventTag2);
+          var eventTag3 = document.createElement('span');
+          eventTag3.classList.add('w-1.5', 'h-1.5', 'bg-green-800', 'rounded-3xl');
+          eventWrapper.appendChild(eventTag3);
+        }
         if (current < _this2.first) {
           classList.add('prev', 'text-gray-500', 'dark:text-white');
         } else if (current > _this2.last) {
@@ -2401,7 +2430,6 @@ var Datepicker = /*#__PURE__*/function () {
     }, processOptions(defaultOptions, this));
     this._options = options;
     Object.assign(config, processOptions(options, this));
-
     // configure by type
     var inline = this.inline = element.tagName !== 'INPUT';
     var inputField;

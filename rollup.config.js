@@ -56,5 +56,36 @@ export default [
       commonjs(),
       babel({ babelHelpers: 'bundled', presets: ['@babel/preset-env'] }),
     ],
-  }
+  },
+  {
+    input: 'js/Datepicker.js',
+    output: {
+      file: 'dist/js/datepicker.js',
+      format: 'iife',
+      name: 'Datepicker',
+      generatedCode: {
+        constBindings: true,
+      },
+    },
+    plugins: [
+      resolve(),
+      commonjs(),
+      babel({ babelHelpers: 'bundled', presets: ['@babel/preset-env'] }),
+    ],
+  },
+  {
+    input: 'js/datepicker-full.js',
+    output: {
+      file: 'dist/js/datepicker-full.js',
+      format: 'iife',
+      generatedCode: {
+        constBindings: true,
+      },
+    },
+    plugins: [
+      resolve(),
+      commonjs(),
+      babel({ babelHelpers: 'bundled', presets: ['@babel/preset-env'] }),
+    ],
+  },
 ];
