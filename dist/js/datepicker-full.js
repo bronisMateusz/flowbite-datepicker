@@ -1153,7 +1153,7 @@
           el.appendChild(eventWrapper);
           if (_this2.eventData) {
             _this2.eventData.forEach(function (event) {
-              if (event.date === current) {
+              if (event.date === current && eventWrapper.children.length < 5) {
                 // Check if the same color already exists
                 var colorExists = Array.from(eventWrapper.children).some(function (child) {
                   return child.classList.contains("bg-".concat(event.color, "-800")) || child.classList.contains("dark:bg-".concat(event.color, "-600"));

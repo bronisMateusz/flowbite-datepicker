@@ -176,7 +176,7 @@ export default class DaysView extends View {
 
       if (this.eventData) {
         this.eventData.forEach((event) => {
-          if (event.date === current) {
+          if (event.date === current && eventWrapper.children.length < 5) {
             // Check if the same color already exists
             let colorExists = Array.from(eventWrapper.children).some(child =>
               child.classList.contains(`bg-${event.color}-800`) || child.classList.contains(`dark:bg-${event.color}-600`)

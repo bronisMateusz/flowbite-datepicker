@@ -230,6 +230,7 @@ function switchPicker(type) {
       { date: new Date(today).setDate(5), color: 'yellow' },
       { date: new Date(today).setDate(5), color: 'pink' },
       { date: new Date(today).setDate(5), color: 'lime' },
+      { date: new Date(today).setDate(5), color: 'purple' },
       { date: new Date(today).setDate(10), color: 'red' },
       { date: new Date(today).setDate(10), color: 'yellow' },
       { date: new Date(today).setDate(15), color: 'purple' },
