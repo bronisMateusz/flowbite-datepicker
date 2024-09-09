@@ -37,6 +37,9 @@ export default class DaysView extends View {
     if (options.datesDisabled) {
       this.datesDisabled = options.datesDisabled;
     }
+    if (options.eventData) {
+      this.eventData = options.eventData;
+    }
     if (options.daysOfWeekDisabled) {
       this.daysOfWeekDisabled = options.daysOfWeekDisabled;
       updateDOW = true;
@@ -151,39 +154,41 @@ export default class DaysView extends View {
       const date = new Date(current);
       const day = date.getDay();
 
-      el.className = `datepicker-cell hover:bg-gray-100 dark:hover:bg-gray-600 flex flex-col flex-1 border-0 rounded-lg cursor-pointer text-center text-gray-900 dark:text-white font-semibold text-sm ${this.cellClass}`;
+      el.className = `datepicker-cell flex flex-col flex-1 border-0 cursor-pointer text-center font-semibold text-sm ${this.cellClass}`;
       el.dataset.date = current;
 
       let dayElement = el.querySelector('.day-number');
-      if (!dayElement) {
-        dayElement = document.createElement('span');
-        dayElement.classList.add('day-number', 'leading-8');
-        el.appendChild(dayElement);
+      if (dayElement) {
+        dayElement.remove();
       }
+      dayElement = document.createElement('span');
+      dayElement.classList.add('day-number', 'leading-9', 'hover:bg-gray-100', 'dark:hover:bg-gray-600', 'rounded-lg', 'text-gray-900', 'dark:text-white');
+      el.appendChild(dayElement);
       dayElement.textContent = date.getDate();
 
       let eventWrapper = el.querySelector('.day-events');
-      if (!eventWrapper) {
-        eventWrapper = document.createElement('span');
-        eventWrapper.classList.add('day-events', 'opacity-60', 'gap-0.5', 'flex', 'flex-row', 'justify-center', 'align-center', 'h-2.5');
-        el.appendChild(eventWrapper);
+      if (eventWrapper) {
+        eventWrapper.remove();
       }
-      else {
-        eventWrapper.innerHTML = '';
-      }
-      // Random 1 - 10 
-      // If there is nuber below 3 add textContent 'x';
-      const random = Math.floor(Math.random() * 10) + 1;
-      if (random < 3) {
-        let eventTag1 = document.createElement('span');
-        eventTag1.classList.add('w-1.5', 'h-1.5', 'bg-red-800', 'rounded-3xl');
-        eventWrapper.appendChild(eventTag1);
-        let eventTag2 = document.createElement('span');
-        eventTag2.classList.add('w-1.5', 'h-1.5', 'bg-blue-800', 'rounded-3xl');
-        eventWrapper.appendChild(eventTag2);
-        let eventTag3 = document.createElement('span');
-        eventTag3.classList.add('w-1.5', 'h-1.5', 'bg-green-800', 'rounded-3xl');
-        eventWrapper.appendChild(eventTag3);
+      eventWrapper = document.createElement('span');
+      eventWrapper.classList.add('day-events', 'opacity-60', 'gap-0.5', 'flex', 'flex-row', 'justify-center', 'items-center', 'h-2.5');
+      el.appendChild(eventWrapper);
+
+      if (this.eventData) {
+        this.eventData.forEach((event) => {
+          if (event.date === current) {
+            // Check if the same color already exists
+            let colorExists = Array.from(eventWrapper.children).some(child =>
+              child.classList.contains(`bg-${event.color}-800`) || child.classList.contains(`dark:bg-${event.color}-600`)
+            );
+
+            if (!colorExists) {
+              let eventTag = document.createElement('span');
+              eventTag.classList.add('w-1.5', 'h-1.5', 'rounded-3xl', `bg-${event.color}-800`, `dark:bg-${event.color}-600`);
+              eventWrapper.appendChild(eventTag);
+            }
+          }
+        });
       }
 
       if (current < this.first) {
@@ -222,8 +227,9 @@ export default class DaysView extends View {
         }
       }
       if (this.selected.includes(current)) {
-        classList.add('selected', 'bg-blue-700', '!bg-primary-700', 'text-white', 'dark:bg-blue-600', 'dark:!bg-primary-600', 'dark:text-white');
-        classList.remove('text-gray-900', 'text-gray-500', 'hover:bg-gray-100', 'dark:text-white', 'dark:hover:bg-gray-600', 'dark:bg-gray-600', 'bg-gray-100', 'bg-gray-200');
+        classList.add('selected');
+        dayElement.classList.add('bg-blue-700', '!bg-primary-700', 'text-white', 'dark:bg-blue-600', 'dark:!bg-primary-600', 'dark:text-white');
+        dayElement.classList.remove('text-gray-900', 'text-gray-500', 'hover:bg-gray-100', 'dark:text-white', 'dark:hover:bg-gray-600', 'dark:bg-gray-600', 'bg-gray-100', 'bg-gray-200');
       }
       if (current === this.focused) {
         classList.add('focused');
@@ -241,12 +247,15 @@ export default class DaysView extends View {
     this.grid
       .querySelectorAll('.range, .range-start, .range-end, .selected, .focused')
       .forEach((el) => {
-        el.classList.remove('range', 'range-start', 'range-end', 'selected', 'bg-blue-700', '!bg-primary-700', 'text-white', 'dark:bg-blue-600', 'dark:!bg-primary-600', 'dark:text-white', 'focused');
-        el.classList.add('text-gray-900', 'rounded-lg', 'dark:text-white');
+        let dayElement = el.querySelector('.day-number');
+        el.classList.remove('range', 'range-start', 'range-end', 'selected', 'focused');
+        dayElement.classList.remove('bg-blue-700', '!bg-primary-700', 'text-white', 'dark:bg-blue-600', 'dark:!bg-primary-600', 'dark:text-white');
+        dayElement.classList.add('text-gray-900', 'rounded-lg', 'dark:text-white');
       });
     Array.from(this.grid.children).forEach((el) => {
       const current = Number(el.dataset.date);
       const classList = el.classList;
+      let dayElement = el.querySelector('.day-number');
       classList.remove('bg-gray-200', 'dark:bg-gray-600', 'rounded-l-lg', 'rounded-r-lg')
       if (current > rangeStart && current < rangeEnd) {
         classList.add('range', 'bg-gray-200', 'dark:bg-gray-600');
@@ -261,8 +270,9 @@ export default class DaysView extends View {
         classList.remove('rounded-lg',);
       }
       if (this.selected.includes(current)) {
-        classList.add('selected', 'bg-blue-700', '!bg-primary-700', 'text-white', 'dark:bg-blue-600', 'dark:!bg-primary-600', 'dark:text-white');
-        classList.remove('text-gray-900', 'hover:bg-gray-100', 'dark:text-white', 'dark:hover:bg-gray-600', 'bg-gray-100', 'bg-gray-200', 'dark:bg-gray-600');
+        classList.add('selected');
+        dayElement.classList.add('bg-blue-700', '!bg-primary-700', 'text-white', 'dark:bg-blue-600', 'dark:!bg-primary-600', 'dark:text-white');
+        dayElement.classList.remove('text-gray-900', 'hover:bg-gray-100', 'dark:text-white', 'dark:hover:bg-gray-600', 'bg-gray-100', 'bg-gray-200', 'dark:bg-gray-600');
       }
       if (current === this.focused) {
         classList.add('focused');

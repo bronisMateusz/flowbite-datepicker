@@ -252,6 +252,29 @@ export default function processOptions(options, datepicker) {
     delete inOpts.todayBtnMode;
   }
 
+  //*** Parse eventData array ***//
+  if (inOpts.eventData) {
+    config.eventData = inOpts.eventData.filter((data) => {
+      if (!data.date || !data.color) {
+        return false;
+      }
+
+      const date = parseDate(data.date, format, locale);
+      if (date === undefined) {
+        return false;
+      }
+      data.date = date;
+      const availableColors = ["slate", "gray", "zinc", "neutral", "stone", "red", "orange", "amber", "yellow", "lime", "green", "emerald", "teal", "cyan", "sky", "blue", "indigo", "violet", "purple", "fuchsia", "pink", "rose"];
+      if (availableColors.indexOf(data.color) === -1) {
+        return false;
+      }
+
+      return true;
+    });
+
+    delete inOpts.eventData;
+  }
+
   //*** copy the rest ***//
   Object.keys(inOpts).forEach((key) => {
     if (inOpts[key] !== undefined && hasProperty(defaultOptions, key)) {
