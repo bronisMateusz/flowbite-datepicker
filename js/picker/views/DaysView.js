@@ -162,7 +162,7 @@ export default class DaysView extends View {
         dayElement.remove();
       }
       dayElement = document.createElement('span');
-      dayElement.classList.add('day-number', 'leading-9', 'hover:bg-gray-100', 'dark:hover:bg-gray-600', 'rounded-lg', 'text-gray-900', 'dark:text-white');
+      dayElement.classList.add('day-number', 'leading-10', 'hover:bg-gray-100', 'dark:hover:bg-gray-600', 'rounded-lg', 'text-gray-900', 'dark:text-white');
       el.appendChild(dayElement);
       dayElement.textContent = date.getDate();
 
@@ -171,7 +171,7 @@ export default class DaysView extends View {
         eventWrapper.remove();
       }
       eventWrapper = document.createElement('span');
-      eventWrapper.classList.add('day-events', 'opacity-60', 'gap-0.5', 'flex', 'flex-row', 'justify-center', 'items-center', 'h-2.5');
+      eventWrapper.classList.add('day-events', 'opacity-60', 'gap-0.5', 'flex', 'flex-row', 'justify-center', 'items-end', 'h-2.5');
       el.appendChild(eventWrapper);
 
       if (this.eventData) {
@@ -197,11 +197,14 @@ export default class DaysView extends View {
         classList.add('next', 'text-gray-500', 'dark:text-white');
       }
       if (this.today === current) {
-        classList.add('today', 'bg-gray-100', 'dark:bg-gray-600');
+        classList.add('today');
+        dayElement.classList.add('bg-gray-100', 'dark:bg-gray-600');
       }
       if (current < this.minDate || current > this.maxDate || this.disabled.includes(current)) {
-        classList.add('disabled', 'cursor-not-allowed', 'text-gray-400', 'dark:text-gray-500');
-        classList.remove('hover:bg-gray-100', 'dark:hover:bg-gray-600', 'text-gray-900', 'dark:text-white', 'cursor-pointer');
+        classList.add('disabled', 'cursor-not-allowed');
+        dayElement.classList.add('text-gray-400', 'dark:text-gray-500');
+        dayElement.classList.remove('hover:bg-gray-100', 'dark:hover:bg-gray-600', 'text-gray-900', 'dark:text-white');
+        classList.remove('cursor-pointer');
       }
       if (this.daysOfWeekDisabled.includes(day)) {
         classList.add('disabled', 'cursor-not-allowed', 'text-gray-400', 'dark:text-gray-500');
