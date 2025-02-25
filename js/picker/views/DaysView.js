@@ -100,7 +100,7 @@ export default class DaysView extends View {
       Array.from(this.dow.children).forEach((el, index) => {
         const dow = (this.weekStart + index) % 7;
         el.textContent = this.dayNames[dow];
-        el.className = this.daysOfWeekDisabled.includes(dow) ? 'dow disabled text-center h-6 leading-6 text-sm font-medium text-gray-500 dark:text-gray-400 cursor-not-allowed' : 'dow text-center h-6 leading-6 text-sm font-medium text-gray-500 dark:text-gray-400';
+        el.className = this.daysOfWeekDisabled.includes(dow) ? 'dow disabled text-center h-6 leading-6 text-base font-medium text-gray-500 dark:text-gray-400 cursor-not-allowed' : 'dow text-center h-6 leading-6 text-base font-medium text-gray-500 dark:text-gray-400';
       });
     }
   }
@@ -154,7 +154,7 @@ export default class DaysView extends View {
       const date = new Date(current);
       const day = date.getDay();
 
-      el.className = `datepicker-cell flex flex-col flex-1 border-0 cursor-pointer text-center font-semibold text-sm ${this.cellClass}`;
+      el.className = `datepicker-cell flex flex-col items-center flex-1 border-0 cursor-pointer text-center font-medium text-base ${this.cellClass}`;
       el.dataset.date = current;
 
       let dayElement = el.querySelector('.day-number');
@@ -162,7 +162,7 @@ export default class DaysView extends View {
         dayElement.remove();
       }
       dayElement = document.createElement('span');
-      dayElement.classList.add('day-number', 'leading-10', 'hover:bg-gray-100', 'dark:hover:bg-gray-600', 'rounded-lg', 'text-gray-900', 'dark:text-white');
+      dayElement.classList.add('day-number', 'size-[2.625rem]', 'leading-10', 'hover:bg-gray-100', 'dark:hover:bg-gray-600', 'rounded-lg', 'text-gray-900', 'dark:text-white');
       el.appendChild(dayElement);
       dayElement.textContent = date.getDate();
 
@@ -192,13 +192,13 @@ export default class DaysView extends View {
       }
 
       if (current < this.first) {
-        classList.add('prev', 'text-gray-500', 'dark:text-white');
+        classList.add('prev', 'opacity-20');
       } else if (current > this.last) {
-        classList.add('next', 'text-gray-500', 'dark:text-white');
+        classList.add('next', 'opacity-20');
       }
       if (this.today === current) {
         classList.add('today');
-        dayElement.classList.add('bg-gray-100', 'dark:bg-gray-600');
+        dayElement.classList.add('text-blue-700', '!text-primary-700', 'dark:text-blue-600', 'dark:!text-primary-600');
       }
       if (current < this.minDate || current > this.maxDate || this.disabled.includes(current)) {
         classList.add('disabled', 'cursor-not-allowed');
@@ -232,7 +232,7 @@ export default class DaysView extends View {
       if (this.selected.includes(current)) {
         classList.add('selected');
         dayElement.classList.add('bg-blue-700', '!bg-primary-700', 'text-white', 'dark:bg-blue-600', 'dark:!bg-primary-600', 'dark:text-white');
-        dayElement.classList.remove('text-gray-900', 'text-gray-500', 'hover:bg-gray-100', 'dark:text-white', 'dark:hover:bg-gray-600', 'dark:bg-gray-600', 'bg-gray-100', 'bg-gray-200');
+        dayElement.classList.remove('text-gray-900', 'text-gray-500', 'hover:bg-gray-100', 'dark:text-white', 'dark:hover:bg-gray-600', 'dark:bg-gray-600', 'bg-gray-100', 'bg-gray-200', 'text-blue-700', '!text-primary-700', 'dark:text-blue-600', 'dark:!text-primary-600');
       }
       if (current === this.focused) {
         classList.add('focused');

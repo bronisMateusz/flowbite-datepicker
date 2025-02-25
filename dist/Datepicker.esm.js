@@ -589,8 +589,11 @@ var defaultOptions = {
   eventData: []
 };
 
-var range = document.createRange();
+var range = null;
 function parseHTML(html) {
+  if (range == null) {
+    range = document.createRange();
+  }
   return range.createContextualFragment(html);
 }
 function hideElement(el) {
@@ -902,12 +905,12 @@ function processOptions(options, datepicker) {
   return config;
 }
 
-var pickerTemplate = optimizeTemplateHTML("<div class=\"datepicker hidden\">\n  <div class=\"datepicker-picker inline-block rounded-lg bg-white dark:bg-gray-700\">\n    <div class=\"datepicker-header\">\n      <div class=\"datepicker-title bg-white dark:bg-gray-700 dark:text-white px-2 py-3 text-center font-semibold\"></div>\n      <div class=\"datepicker-controls flex justify-between mb-2\">\n        <button type=\"button\" class=\"bg-white dark:bg-gray-700 rounded-lg text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white text-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-gray-200 prev-btn\"></button>\n        <button type=\"button\" class=\"text-sm rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-700 font-semibold py-2.5 px-5 hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-200 view-switch\"></button>\n        <button type=\"button\" class=\"bg-white dark:bg-gray-700 rounded-lg text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white text-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-gray-200 next-btn\"></button>\n      </div>\n    </div>\n    <div class=\"datepicker-main p-1\"></div>\n    <div class=\"datepicker-footer\">\n      <div class=\"datepicker-controls flex space-x-2 rtl:space-x-reverse mt-2\">\n        <button type=\"button\" class=\"%buttonClass% today-btn text-white bg-blue-700 !bg-primary-700 dark:bg-blue-600 dark:!bg-primary-600 hover:bg-blue-800 hover:!bg-primary-800 dark:hover:bg-blue-700 dark:hover:!bg-primary-700 focus:ring-4 focus:ring-blue-300 focus:!ring-primary-300 font-medium rounded-lg text-sm px-5 py-2 text-center w-1/2\"></button>\n        <button type=\"button\" class=\"%buttonClass% clear-btn text-gray-900 dark:text-white bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 focus:ring-4 focus:ring-blue-300 focus:!ring-primary-300 font-medium rounded-lg text-sm px-5 py-2 text-center w-1/2\"></button>\n      </div>\n    </div>\n  </div>\n</div>");
+var pickerTemplate = optimizeTemplateHTML("<div class=\"datepicker hidden\">\n  <div class=\"datepicker-picker inline-block rounded-lg bg-white dark:bg-gray-700 p-4 w-full max-w-[23.375rem]\">\n    <div class=\"datepicker-header\">\n      <div class=\"datepicker-title bg-white dark:bg-gray-700 dark:text-white px-2 py-3 text-center font-semibold\"></div>\n      <div class=\"datepicker-controls flex justify-between mb-2\">\n        <button type=\"button\" class=\"bg-white dark:bg-gray-700 rounded-lg text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white text-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-gray-200 prev-btn size-11 grid place-items-center\"></button>\n        <button type=\"button\" class=\"text-base rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-700 font-medium py-2.5 px-5 hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-200 view-switch\"></button>\n        <button type=\"button\" class=\"bg-white dark:bg-gray-700 rounded-lg text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white text-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-gray-200 next-btn size-11 grid place-items-center\"></button>\n      </div>\n    </div>\n    <div class=\"datepicker-main p-1\"></div>\n    <div class=\"datepicker-footer\">\n      <div class=\"datepicker-controls flex space-x-2 rtl:space-x-reverse mt-2\">\n        <button type=\"button\" class=\"%buttonClass% today-btn text-white bg-blue-700 !bg-primary-700 dark:bg-blue-600 dark:!bg-primary-600 hover:bg-blue-800 hover:!bg-primary-800 dark:hover:bg-blue-700 dark:hover:!bg-primary-700 focus:ring-4 focus:ring-blue-300 focus:!ring-primary-300 font-medium rounded-lg text-sm px-5 py-2 text-center w-1/2\"></button>\n        <button type=\"button\" class=\"%buttonClass% clear-btn text-gray-900 dark:text-white bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 focus:ring-4 focus:ring-blue-300 focus:!ring-primary-300 font-medium rounded-lg text-sm px-5 py-2 text-center w-1/2\"></button>\n      </div>\n    </div>\n  </div>\n</div>");
 
-var daysTemplate = optimizeTemplateHTML("<div class=\"days\">\n  <div class=\"days-of-week grid grid-cols-7 mb-1\">".concat(createTagRepeat('span', 7, {
-  "class": 'dow block flex-1 leading-9 border-0 rounded-lg cursor-default text-center text-gray-900 font-semibold text-sm'
-}), "</div>\n  <div class=\"datepicker-grid w-72 grid grid-cols-7 gap-y-1.5\">").concat(createTagRepeat('div', 42, {
-  "class": 'flex-1 leading-9 border-0 rounded-lg cursor-default text-center text-gray-900 font-semibold text-sm h-6 leading-6 text-sm font-medium text-gray-500 dark:text-gray-400'
+var daysTemplate = optimizeTemplateHTML("<div class=\"days w-full\">\n  <div class=\"days-of-week grid grid-cols-7 mb-5\">".concat(createTagRepeat("span", 7, {
+  "class": "dow block flex-1 leading-9 border-0 rounded-lg cursor-default text-center text-gray-900 font-semibold text-sm"
+}), "</div>\n  <div class=\"datepicker-grid w-full grid grid-cols-7\">").concat(createTagRepeat("div", 42, {
+  "class": "block flex-1 leading-9 border-0 rounded-lg cursor-default text-center text-gray-900 font-semibold text-sm h-6 leading-6 text-sm font-medium text-gray-500 dark:text-gray-400"
 }), "</div>\n</div>"));
 
 var calendarWeeksTemplate = optimizeTemplateHTML("<div class=\"calendar-weeks\">\n  <div class=\"days-of-week flex\"><span class=\"dow h-6 leading-6 text-sm font-medium text-gray-500 dark:text-gray-400\"></span></div>\n  <div class=\"weeks\">".concat(createTagRepeat('span', 6, {
@@ -1072,7 +1075,7 @@ var DaysView = /*#__PURE__*/function (_View) {
         Array.from(this.dow.children).forEach(function (el, index) {
           var dow = (_this.weekStart + index) % 7;
           el.textContent = _this.dayNames[dow];
-          el.className = _this.daysOfWeekDisabled.includes(dow) ? 'dow disabled text-center h-6 leading-6 text-sm font-medium text-gray-500 dark:text-gray-400 cursor-not-allowed' : 'dow text-center h-6 leading-6 text-sm font-medium text-gray-500 dark:text-gray-400';
+          el.className = _this.daysOfWeekDisabled.includes(dow) ? 'dow disabled text-center h-6 leading-6 text-base font-medium text-gray-500 dark:text-gray-400 cursor-not-allowed' : 'dow text-center h-6 leading-6 text-base font-medium text-gray-500 dark:text-gray-400';
         });
       }
     }
@@ -1131,14 +1134,14 @@ var DaysView = /*#__PURE__*/function (_View) {
         var current = addDays(_this2.start, index);
         var date = new Date(current);
         var day = date.getDay();
-        el.className = "datepicker-cell flex flex-col flex-1 border-0 cursor-pointer text-center font-semibold text-sm ".concat(_this2.cellClass);
+        el.className = "datepicker-cell flex flex-col items-center flex-1 border-0 cursor-pointer text-center font-medium text-base ".concat(_this2.cellClass);
         el.dataset.date = current;
         var dayElement = el.querySelector('.day-number');
         if (dayElement) {
           dayElement.remove();
         }
         dayElement = document.createElement('span');
-        dayElement.classList.add('day-number', 'leading-10', 'hover:bg-gray-100', 'dark:hover:bg-gray-600', 'rounded-lg', 'text-gray-900', 'dark:text-white');
+        dayElement.classList.add('day-number', 'size-[2.625rem]', 'leading-10', 'hover:bg-gray-100', 'dark:hover:bg-gray-600', 'rounded-lg', 'text-gray-900', 'dark:text-white');
         el.appendChild(dayElement);
         dayElement.textContent = date.getDate();
         var eventWrapper = el.querySelector('.day-events');
@@ -1164,13 +1167,13 @@ var DaysView = /*#__PURE__*/function (_View) {
           });
         }
         if (current < _this2.first) {
-          classList.add('prev', 'text-gray-500', 'dark:text-white');
+          classList.add('prev', 'opacity-20');
         } else if (current > _this2.last) {
-          classList.add('next', 'text-gray-500', 'dark:text-white');
+          classList.add('next', 'opacity-20');
         }
         if (_this2.today === current) {
           classList.add('today');
-          dayElement.classList.add('bg-gray-100', 'dark:bg-gray-600');
+          dayElement.classList.add('text-blue-700', '!text-primary-700', 'dark:text-blue-600', 'dark:!text-primary-600');
         }
         if (current < _this2.minDate || current > _this2.maxDate || _this2.disabled.includes(current)) {
           classList.add('disabled', 'cursor-not-allowed');
@@ -1206,7 +1209,7 @@ var DaysView = /*#__PURE__*/function (_View) {
         if (_this2.selected.includes(current)) {
           classList.add('selected');
           dayElement.classList.add('bg-blue-700', '!bg-primary-700', 'text-white', 'dark:bg-blue-600', 'dark:!bg-primary-600', 'dark:text-white');
-          dayElement.classList.remove('text-gray-900', 'text-gray-500', 'hover:bg-gray-100', 'dark:text-white', 'dark:hover:bg-gray-600', 'dark:bg-gray-600', 'bg-gray-100', 'bg-gray-200');
+          dayElement.classList.remove('text-gray-900', 'text-gray-500', 'hover:bg-gray-100', 'dark:text-white', 'dark:hover:bg-gray-600', 'dark:bg-gray-600', 'bg-gray-100', 'bg-gray-200', 'text-blue-700', '!text-primary-700', 'dark:text-blue-600', 'dark:!text-primary-600');
         }
         if (current === _this2.focused) {
           classList.add('focused');
@@ -1305,7 +1308,7 @@ var MonthsView = /*#__PURE__*/function (_View) {
       var onConstruction = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
       if (onConstruction) {
         this.grid = this.element;
-        this.element.classList.add('months', 'datepicker-grid', 'w-64', 'grid', 'grid-cols-4');
+        this.element.classList.add('months', 'datepicker-grid', 'w-full', 'grid', 'grid-cols-4');
         this.grid.appendChild(parseHTML(createTagRepeat('span', 12, {
           'data-month': function dataMonth(ix) {
             return ix;
@@ -1399,7 +1402,7 @@ var MonthsView = /*#__PURE__*/function (_View) {
       Array.from(this.grid.children).forEach(function (el, index) {
         var classList = el.classList;
         var date = dateValue(_this.year, index, 1);
-        el.className = "datepicker-cell hover:bg-gray-100 dark:hover:bg-gray-600 block flex-1 leading-9 border-0 rounded-lg cursor-pointer text-center text-gray-900 dark:text-white font-semibold text-sm ".concat(_this.cellClass);
+        el.className = "datepicker-cell hover:bg-gray-100 dark:hover:bg-gray-600 block flex-1 leading-9 border-0 rounded-lg cursor-pointer text-center text-gray-900 dark:text-white font-medium text-base ".concat(_this.cellClass);
         if (_this.isMinView) {
           el.dataset.date = date;
         }
@@ -1504,7 +1507,7 @@ var YearsView = /*#__PURE__*/function (_View) {
         this.navStep = this.step * 10;
         this.beforeShowOption = "beforeShow".concat(toTitleCase(this.cellClass));
         this.grid = this.element;
-        this.element.classList.add(this.name, 'datepicker-grid', 'w-64', 'grid', 'grid-cols-4');
+        this.element.classList.add(this.name, 'datepicker-grid', 'w-full', 'grid', 'grid-cols-4');
         this.grid.appendChild(parseHTML(createTagRepeat('span', 12)));
       }
       _get(_getPrototypeOf(YearsView.prototype), "init", this).call(this, options);
@@ -1582,7 +1585,7 @@ var YearsView = /*#__PURE__*/function (_View) {
         var classList = el.classList;
         var current = _this2.start + index * _this2.step;
         var date = dateValue(current, 0, 1);
-        el.className = "datepicker-cell hover:bg-gray-100 dark:hover:bg-gray-600 block flex-1 leading-9 border-0 rounded-lg cursor-pointer text-center text-gray-900 dark:text-white font-semibold text-sm ".concat(_this2.cellClass);
+        el.className = "datepicker-cell hover:bg-gray-100 dark:hover:bg-gray-600 block flex-1 leading-9 border-0 rounded-lg cursor-pointer text-center text-gray-900 dark:text-white font-medium text-base ".concat(_this2.cellClass);
         if (_this2.isMinView) {
           el.dataset.date = date;
         }
@@ -2462,6 +2465,7 @@ var Datepicker = /*#__PURE__*/function () {
     }, processOptions(defaultOptions, this));
     this._options = options;
     Object.assign(config, processOptions(options, this));
+
     // configure by type
     var inline = this.inline = element.tagName !== 'INPUT';
     var inputField;
