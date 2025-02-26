@@ -4,12 +4,6 @@ module.exports = {
   theme: {
     extend: {},
   },
-  safelist: [
-    {
-      pattern: /^(bg|stroke|fill)-[a-z]+-\d+$/,
-      variants: ['dark'],
-    },
-  ],
   variants: {
     extend: {},
   },

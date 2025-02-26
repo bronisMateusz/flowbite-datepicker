@@ -225,18 +225,17 @@ function switchPicker(type) {
   const el = sandbox.querySelector('.date');
   const customOptions = {
     eventData: [
-      { date: new Date(today).setDate(5), color: 'blue' },
-      { date: new Date(today).setDate(5), color: 'green' },
-      { date: new Date(today).setDate(5), color: 'yellow' },
-      { date: new Date(today).setDate(5), color: 'pink' },
-      { date: new Date(today).setDate(5), color: 'lime' },
-      { date: new Date(today).setDate(5), color: 'purple' },
-      { date: new Date(today).setDate(10), color: 'red' },
-      { date: new Date(today).setDate(10), color: 'yellow' },
-      { date: new Date(today).setDate(15), color: 'purple' },
+      { date: new Date(today).setDate(5), color: "blue" },
+      { date: new Date(today).setDate(5), color: "green" },
+      { date: new Date(today).setDate(5), color: "yellow" },
+      { date: new Date(today).setDate(5), color: "pink" },
+      { date: new Date(today).setDate(5), color: "lime" },
+      { date: new Date(today).setDate(5), color: "purple" },
+      { date: new Date(today).setDate(10), color: "red" },
+      { date: new Date(today).setDate(10), color: "yellow" },
+      { date: new Date(today).setDate(15), color: "purple" },
     ],
   };
-  console.log(customOptions);
   window.demoPicker = type === 'range'
     ? new DateRangePicker(el, customOptions)
     : new Datepicker(el, customOptions);
@@ -256,12 +255,12 @@ const refreshOptionForm = function refreshOptionForm() {
     minDate: new Date(today).setFullYear(0, 0, 1),
     maxDate: undefined,
     eventData: [
-      {date: new Date(today).setDate(5), color: 'blue'},
-      {date: new Date(today).setDate(5), color: 'green'},
-      { date: new Date(today).setDate(5), color: 'blue' },
-      {date: new Date(today).setDate(10), color: 'red'},
-      {date: new Date(today).setDate(10), color: 'yellow'},
-      {date: new Date(today).setDate(15), color: 'purple'},
+      { date: new Date(today).setDate(5), color: "blue" },
+      { date: new Date(today).setDate(5), color: "green" },
+      { date: new Date(today).setDate(5), color: "blue" },
+      { date: new Date(today).setDate(10), color: "red" },
+      { date: new Date(today).setDate(10), color: "yellow" },
+      { date: new Date(today).setDate(15), color: "purple" },
     ],
   };
   const formElemByName = name => optsForm.querySelector(`[name="${name}"]`);

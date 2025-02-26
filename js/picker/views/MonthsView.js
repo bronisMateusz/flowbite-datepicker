@@ -30,7 +30,7 @@ export default class MonthsView extends View {
   init(options, onConstruction = true) {
     if (onConstruction) {
       this.grid = this.element;
-      this.element.classList.add('months', 'datepicker-grid', 'w-64', 'grid', 'grid-cols-4');
+      this.element.classList.add('months', 'datepicker-grid', 'w-full', 'grid', 'grid-cols-4');
       this.grid.appendChild(parseHTML(createTagRepeat('span', 12, {'data-month': ix => ix})));
     }
     super.init(options);
@@ -116,7 +116,7 @@ export default class MonthsView extends View {
       const classList = el.classList;
       const date = dateValue(this.year, index, 1);
 
-      el.className = `datepicker-cell hover:bg-gray-100 dark:hover:bg-gray-600 block flex-1 leading-9 border-0 rounded-lg cursor-pointer text-center text-gray-900 dark:text-white font-semibold text-sm ${this.cellClass}`;
+      el.className = `datepicker-cell hover:bg-gray-100 dark:hover:bg-gray-600 block flex-1 leading-9 border-0 rounded-lg cursor-pointer text-center text-gray-900 dark:text-white font-medium text-base ${this.cellClass}`;
       if (this.isMinView) {
         el.dataset.date = date;
       }

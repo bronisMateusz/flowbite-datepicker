@@ -18,7 +18,7 @@ export default class YearsView extends View {
       this.navStep = this.step * 10;
       this.beforeShowOption = `beforeShow${toTitleCase(this.cellClass)}`;
       this.grid = this.element;
-      this.element.classList.add(this.name, 'datepicker-grid', 'w-64', 'grid', 'grid-cols-4');
+      this.element.classList.add(this.name, 'datepicker-grid', 'w-full', 'grid', 'grid-cols-4');
       this.grid.appendChild(parseHTML(createTagRepeat('span', 12)));
     }
     super.init(options);
@@ -89,7 +89,7 @@ export default class YearsView extends View {
       const current = this.start + (index * this.step);
       const date = dateValue(current, 0, 1);
 
-      el.className = `datepicker-cell hover:bg-gray-100 dark:hover:bg-gray-600 block flex-1 leading-9 border-0 rounded-lg cursor-pointer text-center text-gray-900 dark:text-white font-semibold text-sm ${this.cellClass}`;
+      el.className = `datepicker-cell hover:bg-gray-100 dark:hover:bg-gray-600 block flex-1 leading-9 border-0 rounded-lg cursor-pointer text-center text-gray-900 dark:text-white font-medium text-base ${this.cellClass}`;
       if (this.isMinView) {
         el.dataset.date = date;
       }

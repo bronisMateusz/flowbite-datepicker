@@ -1,13 +1,13 @@
-import {optimizeTemplateHTML} from '../../lib/utils.js';
+import { optimizeTemplateHTML } from "../../lib/utils.js";
 
 const pickerTemplate = optimizeTemplateHTML(`<div class="datepicker hidden">
-  <div class="datepicker-picker inline-block rounded-lg bg-white dark:bg-gray-700">
+  <div class="datepicker-picker block rounded-lg bg-white dark:bg-gray-700 p-4 w-full max-w-[23.375rem] mx-auto">
     <div class="datepicker-header">
       <div class="datepicker-title bg-white dark:bg-gray-700 dark:text-white px-2 py-3 text-center font-semibold"></div>
       <div class="datepicker-controls flex justify-between mb-2">
-        <button type="button" class="bg-white dark:bg-gray-700 rounded-lg text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white text-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-gray-200 prev-btn"></button>
-        <button type="button" class="text-sm rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-700 font-semibold py-2.5 px-5 hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-200 view-switch"></button>
-        <button type="button" class="bg-white dark:bg-gray-700 rounded-lg text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white text-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-gray-200 next-btn"></button>
+        <button type="button" class="bg-white dark:bg-gray-700 rounded-lg text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white text-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-gray-200 prev-btn size-11 grid place-items-center"></button>
+        <button type="button" class="text-base rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-700 font-medium py-2.5 px-5 hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-200 view-switch"></button>
+        <button type="button" class="bg-white dark:bg-gray-700 rounded-lg text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white text-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-gray-200 next-btn size-11 grid place-items-center"></button>
       </div>
     </div>
     <div class="datepicker-main p-1"></div>
