@@ -13,6 +13,7 @@ const defaultOptions = {
   daysOfWeekHighlighted: [],
   defaultViewDate: undefined, // placeholder, defaults to today() by the program
   disableTouchKeyboard: false,
+  eventData: [],
   format: 'mm/dd/yyyy',
   language: 'en',
   maxDate: null,
@@ -32,8 +33,8 @@ const defaultOptions = {
   todayBtnMode: 0,
   todayHighlight: false,
   updateOnBlur: true,
+  variant: 'calendar_default',
   weekStart: 0,
-  eventData: [],
 };
 
 export default defaultOptions;

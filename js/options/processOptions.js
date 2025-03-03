@@ -33,6 +33,11 @@ function validateViewId(value, origValue, max = 3) {
   return viewId >= 0 && viewId <= max ? viewId : origValue;
 }
 
+function validateVariant(value, origValue) {
+  const validVariants = ["calendar_default", "calendar_wide"];
+  return validVariants.includes(value) ? value : origValue;
+}
+
 // Create Datepicker configuration to set
 export default function processOptions(options, datepicker) {
   const inOpts = Object.assign({}, options);
@@ -72,7 +77,7 @@ export default function processOptions(options, datepicker) {
       const origLocale = locale || locales[defaultLang];
       // use default language's properties for the fallback
       locale = Object.assign({
-        format: defaultFormat,
+          format: defaultFormat,
         weekStart: defaultWeekStart
       }, locales[defaultLang]);
       if (language !== defaultLang) {
@@ -110,13 +115,13 @@ export default function processOptions(options, datepicker) {
   if (inOpts.minDate !== undefined) {
     minDt = inOpts.minDate === null
       ? dateValue(0, 0, 1)  // set 0000-01-01 to prevent negative values for year
-      : validateDate(inOpts.minDate, format, locale, minDt);
+        : validateDate(inOpts.minDate, format, locale, minDt);
     delete inOpts.minDate;
   }
   if (inOpts.maxDate !== undefined) {
     maxDt = inOpts.maxDate === null
-      ? undefined
-      : validateDate(inOpts.maxDate, format, locale, maxDt);
+        ? undefined
+        : validateDate(inOpts.maxDate, format, locale, maxDt);
     delete inOpts.maxDate;
   }
   if (maxDt < minDt) {
@@ -273,6 +278,12 @@ export default function processOptions(options, datepicker) {
     });
 
     delete inOpts.eventData;
+  }
+
+  if (inOpts.variant) {
+    config.variant = validateVariant(inOpts.variant, options.variant);
+
+    delete inOpts.variant;
   }
 
   //*** copy the rest ***//

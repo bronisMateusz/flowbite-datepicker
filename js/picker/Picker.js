@@ -111,7 +111,7 @@ export default class Picker {
   constructor(datepicker) {
     this.datepicker = datepicker;
 
-    const template = pickerTemplate.replace(/%buttonClass%/g, datepicker.config.buttonClass);
+    const template = pickerTemplate(datepicker.config);
     const element = this.element = parseHTML(template).firstChild;
     const [header, main, footer] = element.firstChild.children;
     const title = header.firstElementChild;
