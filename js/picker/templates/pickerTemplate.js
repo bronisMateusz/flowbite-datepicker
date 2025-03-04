@@ -4,7 +4,7 @@ export default function pickerTemplate(config) {
   console.log(config.variant);
 
   return optimizeTemplateHTML(`<div class="datepicker hidden">
-  <div class="datepicker-picker block rounded-lg bg-white dark:bg-gray-700 p-4 w-full max-w-[23.375rem] ${config.variant === 'calendar_default' ? 'mx-auto' : 'lg:max-w-full lg:p-0'}">
+  <div class="datepicker-picker block rounded-lg bg-white dark:bg-gray-700 p-4 w-full max-w-[23.375rem] ${config.variant === 'calendar_default' ? 'mx-auto' : 'max-w-full'}">
     <div class="datepicker-header">
       <div class="datepicker-title bg-white dark:bg-gray-700 dark:text-white px-2 py-3 text-center font-semibold"></div>
       <div class="datepicker-controls flex justify-between mb-2">

@@ -9,6 +9,7 @@ import Picker from './picker/Picker.js';
 import {triggerDatepickerEvent} from './events/functions.js';
 import {onKeydown, onFocus, onMousedown, onClickInput, onPaste} from './events/inputFieldListeners.js';
 import {onClickOutside} from './events/otherListeners.js';
+import CalendarWideStrategy from "./variants/CalendarWideStrategy.js";
 
 function stringifyDates(dates, config) {
   return dates
@@ -192,6 +193,11 @@ export default class Datepicker {
     }
 
     const picker = this.picker = new Picker(this);
+
+    if (this.config.variant === "calendar_wide") {
+      this.wideCalendarStrategy = new CalendarWideStrategy(this);
+      this.wideCalendarStrategy.initialize();
+    }
 
     if (inline) {
       this.show();
