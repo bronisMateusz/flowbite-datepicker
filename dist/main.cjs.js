@@ -570,6 +570,7 @@ var defaultOptions = {
   defaultViewDate: undefined,
   // placeholder, defaults to today() by the program
   disableTouchKeyboard: false,
+  eventData: [],
   format: 'mm/dd/yyyy',
   language: 'en',
   maxDate: null,
@@ -589,8 +590,8 @@ var defaultOptions = {
   todayBtnMode: 0,
   todayHighlight: false,
   updateOnBlur: true,
-  weekStart: 0,
-  eventData: []
+  variant: 'calendar_default',
+  weekStart: 0
 };
 
 var range = null;
@@ -664,6 +665,10 @@ function validateViewId(value, origValue) {
   var max = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 3;
   var viewId = parseInt(value, 10);
   return viewId >= 0 && viewId <= max ? viewId : origValue;
+}
+function validateVariant(value, origValue) {
+  var validVariants = ["calendar_default", "calendar_wide"];
+  return validVariants.includes(value) ? value : origValue;
 }
 
 // Create Datepicker configuration to set
@@ -899,6 +904,10 @@ function processOptions(options, datepicker) {
     });
     delete inOpts.eventData;
   }
+  if (inOpts.variant) {
+    config.variant = validateVariant(inOpts.variant, options.variant);
+    delete inOpts.variant;
+  }
 
   //*** copy the rest ***//
   Object.keys(inOpts).forEach(function (key) {
@@ -909,7 +918,10 @@ function processOptions(options, datepicker) {
   return config;
 }
 
-var pickerTemplate = optimizeTemplateHTML("<div class=\"datepicker hidden\">\n  <div class=\"datepicker-picker block rounded-lg bg-white dark:bg-gray-700 p-4 w-full max-w-[23.375rem] mx-auto\">\n    <div class=\"datepicker-header\">\n      <div class=\"datepicker-title bg-white dark:bg-gray-700 dark:text-white px-2 py-3 text-center font-semibold\"></div>\n      <div class=\"datepicker-controls flex justify-between mb-2\">\n        <button type=\"button\" class=\"bg-white dark:bg-gray-700 rounded-lg text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white text-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-gray-200 prev-btn size-11 grid place-items-center\"></button>\n        <button type=\"button\" class=\"text-base rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-700 font-medium py-2.5 px-5 hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-200 view-switch\"></button>\n        <button type=\"button\" class=\"bg-white dark:bg-gray-700 rounded-lg text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white text-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-gray-200 next-btn size-11 grid place-items-center\"></button>\n      </div>\n    </div>\n    <div class=\"datepicker-main p-1\"></div>\n    <div class=\"datepicker-footer\">\n      <div class=\"datepicker-controls flex space-x-2 rtl:space-x-reverse mt-2\">\n        <button type=\"button\" class=\"%buttonClass% today-btn text-white bg-blue-700 !bg-primary-700 dark:bg-blue-600 dark:!bg-primary-600 hover:bg-blue-800 hover:!bg-primary-800 dark:hover:bg-blue-700 dark:hover:!bg-primary-700 focus:ring-4 focus:ring-blue-300 focus:!ring-primary-300 font-medium rounded-lg text-sm px-5 py-2 text-center w-1/2\"></button>\n        <button type=\"button\" class=\"%buttonClass% clear-btn text-gray-900 dark:text-white bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 focus:ring-4 focus:ring-blue-300 focus:!ring-primary-300 font-medium rounded-lg text-sm px-5 py-2 text-center w-1/2\"></button>\n      </div>\n    </div>\n  </div>\n</div>");
+function pickerTemplate(config) {
+  console.log(config.variant);
+  return optimizeTemplateHTML("<div class=\"datepicker hidden\">\n  <div class=\"datepicker-picker block rounded-lg bg-white dark:bg-gray-700 p-4 w-full max-w-[23.375rem] ".concat(config.variant === 'calendar_default' ? 'mx-auto' : 'max-w-full', "\">\n    <div class=\"datepicker-header\">\n      <div class=\"datepicker-title bg-white dark:bg-gray-700 dark:text-white px-2 py-3 text-center font-semibold\"></div>\n      <div class=\"datepicker-controls flex justify-between mb-2\">\n        <button type=\"button\" class=\"bg-white dark:bg-gray-700 rounded-lg text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white text-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-gray-200 prev-btn size-11 grid place-items-center\"></button>\n        <button type=\"button\" class=\"text-base rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-700 font-medium py-2.5 px-5 hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-200 view-switch\"></button>\n        <button type=\"button\" class=\"bg-white dark:bg-gray-700 rounded-lg text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white text-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-gray-200 next-btn size-11 grid place-items-center\"></button>\n      </div>\n    </div>\n    <div class=\"datepicker-main ").concat(config.variant === 'calendar_default' ? 'p-1' : '', "\"></div>\n    <div class=\"datepicker-footer\">\n      <div class=\"datepicker-controls flex space-x-2 rtl:space-x-reverse mt-2\">\n        <button type=\"button\" class=\"").concat(config.buttonClass, " today-btn text-white bg-blue-700 !bg-primary-700 dark:bg-blue-600 dark:!bg-primary-600 hover:bg-blue-800 hover:!bg-primary-800 dark:hover:bg-blue-700 dark:hover:!bg-primary-700 focus:ring-4 focus:ring-blue-300 focus:!ring-primary-300 font-medium rounded-lg text-sm px-5 py-2 text-center w-1/2\"></button>\n        <button type=\"button\" class=\"").concat(config.buttonClass, " clear-btn text-gray-900 dark:text-white bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 focus:ring-4 focus:ring-blue-300 focus:!ring-primary-300 font-medium rounded-lg text-sm px-5 py-2 text-center w-1/2\"></button>\n      </div>\n    </div>\n  </div>\n</div>"));
+}
 
 var daysTemplate = optimizeTemplateHTML("<div class=\"days w-full\">\n  <div class=\"days-of-week grid grid-cols-7 mb-5\">".concat(createTagRepeat("span", 7, {
   "class": "dow block flex-1 leading-9 border-0 rounded-lg cursor-default text-center text-gray-900 font-semibold text-sm"
@@ -1890,7 +1902,7 @@ var Picker = /*#__PURE__*/function () {
   function Picker(datepicker) {
     _classCallCheck(this, Picker);
     this.datepicker = datepicker;
-    var template = pickerTemplate.replace(/%buttonClass%/g, datepicker.config.buttonClass);
+    var template = pickerTemplate(datepicker.config);
     var element = this.element = parseHTML(template).firstChild;
     var _element$firstChild$c = _slicedToArray(element.firstChild.children, 3),
       header = _element$firstChild$c[0],
@@ -2337,6 +2349,547 @@ function onClickOutside(datepicker, ev) {
   unfocus(datepicker);
 }
 
+/**
+ * Strategia dla wariantu calendar_wide.
+ * Odpowiada za wszystkie aspekty wyświetlania i zachowania szerokiego kalendarza.
+ */
+var CalendarWideStrategy = /*#__PURE__*/function () {
+  function CalendarWideStrategy(datepicker) {
+    _classCallCheck(this, CalendarWideStrategy);
+    this.datepicker = datepicker;
+    this.initialized = false;
+    this._handlers = {};
+    this.eventData = this.datepicker.config.eventData || [];
+  }
+  return _createClass(CalendarWideStrategy, [{
+    key: "initialize",
+    value: function initialize() {
+      if (this.initialized) return;
+      var pickerElement = this.datepicker.picker.element;
+      if (!pickerElement) return;
+      this._hideStandardCalendarElements(pickerElement);
+      this._createCalendarStructure(pickerElement);
+      this._loadSavedState();
+      this._setupEventListeners();
+      this.initialized = true;
+    }
+  }, {
+    key: "_loadSavedState",
+    value: function _loadSavedState() {
+      var yearToUse = new Date().getFullYear();
+      var monthToUse = new Date().getMonth();
+      try {
+        var savedStateJson = sessionStorage.getItem("datepicker_state");
+        if (savedStateJson) {
+          var savedState = JSON.parse(savedStateJson);
+          if (Date.now() - savedState.timestamp < 10000) {
+            yearToUse = savedState.year;
+            monthToUse = savedState.month;
+          }
+        }
+      } catch (e) {
+        console.error("Error loading calendar state:", e);
+      }
+      this._renderCalendar(monthToUse, yearToUse);
+    }
+  }, {
+    key: "saveState",
+    value: function saveState() {
+      var pickerElement = this.datepicker.picker.element;
+      if (!pickerElement) return;
+      var yearDisplay = pickerElement.querySelector(".year-display");
+      var activeMonthCell = pickerElement.querySelector(".month-cell.active");
+      if (!yearDisplay || !activeMonthCell) return;
+      var state = {
+        year: parseInt(yearDisplay.textContent, 10),
+        month: parseInt(activeMonthCell.dataset.month, 10),
+        timestamp: Date.now()
+      };
+      try {
+        sessionStorage.setItem("datepicker_state", JSON.stringify(state));
+      } catch (e) {
+        console.error("Error saving calendar state:", e);
+      }
+    }
+  }, {
+    key: "_createCalendarStructure",
+    value: function _createCalendarStructure(container) {
+      var datepickerMain = container.querySelector(".datepicker-main") || container.querySelector(".datepicker-picker");
+      if (!datepickerMain) return;
+      datepickerMain.appendChild(this._createYearNavigation());
+      datepickerMain.appendChild(this._createMonthsGrid());
+      datepickerMain.appendChild(this._createDaysContainer());
+    }
+  }, {
+    key: "_createYearNavigation",
+    value: function _createYearNavigation() {
+      var yearNavigation = document.createElement("div");
+      yearNavigation.className = "flex items-center justify-between mb-2 year-navigation";
+      var prevYearBtn = document.createElement("button");
+      prevYearBtn.className = "bg-white dark:bg-gray-700 rounded-lg text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white text-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-gray-200 prev-year-btn size-11 grid place-items-center";
+      prevYearBtn.type = "button";
+      prevYearBtn.innerHTML = '<svg class="w-4 h-4 rtl:rotate-180 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4"></path></svg>';
+      var yearDisplay = document.createElement("span");
+      yearDisplay.className = "text-base font-medium text-gray-900 year-display dark:text-white";
+      yearDisplay.textContent = new Date().getFullYear();
+      var nextYearBtn = document.createElement("button");
+      nextYearBtn.className = "bg-white dark:bg-gray-700 rounded-lg text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white text-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-gray-200 next-year-btn size-11 grid place-items-center";
+      nextYearBtn.type = "button";
+      nextYearBtn.innerHTML = '<svg class="size-4 rtl:rotate-180 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"></path></svg>';
+      yearNavigation.appendChild(prevYearBtn);
+      yearNavigation.appendChild(yearDisplay);
+      yearNavigation.appendChild(nextYearBtn);
+      return yearNavigation;
+    }
+  }, {
+    key: "_createMonthsGrid",
+    value: function _createMonthsGrid() {
+      var monthsGrid = document.createElement("div");
+      monthsGrid.className = "grid grid-cols-4 gap-2 sm:grid-cols-6 md:grid-cols-12 months-grid";
+      for (var i = 0; i < 12; i++) {
+        var monthCell = document.createElement("button");
+        monthCell.className = "p-2 font-medium text-center text-gray-900 transition-colors rounded-lg month-cell dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600";
+        monthCell.type = "button";
+        monthCell.setAttribute("data-month", i);
+        monthCell.textContent = "Miesi\u0105c ".concat(i + 1);
+        monthsGrid.appendChild(monthCell);
+      }
+      return monthsGrid;
+    }
+  }, {
+    key: "_createDaysContainer",
+    value: function _createDaysContainer() {
+      var daysContainer = document.createElement("div");
+      daysContainer.className = "w-full pt-8 mt-8 border-t border-gray-200 calendar-wide-days-container dark:border-gray-700";
+      return daysContainer;
+    }
+  }, {
+    key: "_refreshMonthNames",
+    value: function _refreshMonthNames() {
+      var pickerElement = this.datepicker.picker.element;
+      var monthsGrid = pickerElement.querySelector(".months-grid");
+      if (!monthsGrid) return;
+      var monthNames = this._getLocalizedMonthNames();
+      var monthCells = monthsGrid.querySelectorAll(".month-cell");
+      monthCells.forEach(function (cell, index) {
+        // Protect against missing month names
+        cell.textContent = monthNames[index] || "";
+        cell.setAttribute("data-month", index);
+      });
+
+      // Specify which month should be active
+      var yearDisplay = pickerElement.querySelector(".year-display");
+      var yearToShow = yearDisplay ? parseInt(yearDisplay.textContent, 10) : new Date().getFullYear();
+      var currentDate = this.datepicker.getDate();
+
+      // Specify the month to be highlighted
+      var monthToHighlight;
+
+      // If we have a date selected and its year matches the displayed year, highlight its month
+      if (currentDate && currentDate.getFullYear() === yearToShow) {
+        monthToHighlight = currentDate.getMonth();
+      }
+      // Otherwise use the currently displayed month
+      else {
+        monthToHighlight = this._getDisplayedMonth();
+      }
+      this._highlightMonth(monthCells, monthToHighlight);
+    }
+  }, {
+    key: "_getLocalizedMonthNames",
+    value: function _getLocalizedMonthNames() {
+      var localeKey = this.datepicker.config.language || "en";
+      var Datepicker = this.datepicker.constructor;
+      if (Datepicker.locales && Datepicker.locales[localeKey]) {
+        var locale = Datepicker.locales[localeKey];
+
+        // We use abbreviated names where available
+        if (locale.monthsShort && locale.monthsShort.length === 12) {
+          return locale.monthsShort;
+        }
+        // Alternatively, we abbreviate the full names
+        else if (locale.months && locale.months.length === 12) {
+          return locale.months.map(function (month) {
+            return month.substring(0, 3);
+          });
+        }
+      }
+    }
+  }, {
+    key: "_highlightMonth",
+    value: function _highlightMonth(monthCells, monthIndex) {
+      var baseClasses = "p-2 font-medium text-center rounded-lg month-cell transition-colors";
+      var activeClasses = "active bg-blue-700 !bg-primary-700 text-white dark:bg-blue-600 dark:!bg-primary-600 dark:text-white";
+      var inactiveClasses = "text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600";
+      monthCells.forEach(function (cell, index) {
+        cell.className = baseClasses;
+        if (index === monthIndex) {
+          cell.className += " ".concat(activeClasses);
+        } else {
+          cell.className += " ".concat(inactiveClasses);
+        }
+      });
+    }
+  }, {
+    key: "_clearMonthHighlight",
+    value: function _clearMonthHighlight(monthCells) {
+      var baseClasses = "p-2 font-medium text-center rounded-lg month-cell transition-colors";
+      var inactiveClasses = "text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600";
+      monthCells.forEach(function (cell) {
+        cell.className = "".concat(baseClasses, " ").concat(inactiveClasses);
+      });
+    }
+  }, {
+    key: "_getDisplayedMonth",
+    value: function _getDisplayedMonth() {
+      try {
+        var savedStateJson = sessionStorage.getItem("datepicker_state");
+        if (savedStateJson) {
+          var savedState = JSON.parse(savedStateJson);
+          if (Date.now() - savedState.timestamp < 1000) {
+            // valid for one second
+            return savedState.month;
+          }
+        }
+      } catch (e) {
+        console.error("Error reading month from session storage:", e);
+      }
+      var firstDayCell = this.datepicker.picker.element.querySelector(".calendar-wide-day[data-date]");
+      if (firstDayCell) {
+        var dateStr = firstDayCell.getAttribute("data-date");
+        if (dateStr) {
+          var dateParts = dateStr.split("-");
+          if (dateParts.length === 3) {
+            return parseInt(dateParts[1], 10) - 1; // Subtract 1, as months are indexed from 0
+          }
+        }
+      }
+      return new Date().getMonth();
+    }
+  }, {
+    key: "_setupEventListeners",
+    value: function _setupEventListeners() {
+      var pickerElement = this.datepicker.picker.element;
+      if (!pickerElement) return;
+      this._setupMonthClickHandler(pickerElement);
+      this._setupYearNavigationHandlers(pickerElement);
+      this._setupDayClickHandler(pickerElement);
+    }
+  }, {
+    key: "_setupMonthClickHandler",
+    value: function _setupMonthClickHandler(pickerElement) {
+      var _this = this;
+      var monthsGrid = pickerElement.querySelector(".months-grid");
+      if (!monthsGrid) return;
+
+      // Delete previous handler
+      if (this._handlers.monthClick) {
+        monthsGrid.removeEventListener("click", this._handlers.monthClick);
+      }
+
+      // Add a new handler
+      this._handlers.monthClick = function (e) {
+        var monthCell = e.target.closest(".month-cell");
+        if (!monthCell) return;
+        e.preventDefault();
+        e.stopPropagation();
+        var monthIndex = parseInt(monthCell.dataset.month, 10);
+        if (isNaN(monthIndex)) return;
+        var yearDisplay = pickerElement.querySelector(".year-display");
+        var currentYear = yearDisplay ? parseInt(yearDisplay.textContent, 10) : new Date().getFullYear();
+
+        // Update view
+        _this._renderDaysForSelectedMonth(monthIndex, currentYear);
+        _this._highlightMonth(monthsGrid.querySelectorAll(".month-cell"), monthIndex);
+        _this.saveState();
+      };
+      monthsGrid.addEventListener("click", this._handlers.monthClick);
+    }
+  }, {
+    key: "_setupYearNavigationHandlers",
+    value: function _setupYearNavigationHandlers(pickerElement) {
+      var _this2 = this;
+      var prevYearBtn = pickerElement.querySelector(".prev-year-btn");
+      var nextYearBtn = pickerElement.querySelector(".next-year-btn");
+      var yearDisplay = pickerElement.querySelector(".year-display");
+      var monthsGrid = pickerElement.querySelector(".months-grid");
+      if (!prevYearBtn || !nextYearBtn || !yearDisplay || !monthsGrid) return;
+
+      // Remove previous handlers
+      if (this._handlers.prevYear) {
+        prevYearBtn.removeEventListener("click", this._handlers.prevYear);
+      }
+      if (this._handlers.nextYear) {
+        nextYearBtn.removeEventListener("click", this._handlers.nextYear);
+      }
+
+      // Handler for the previous year
+      this._handlers.prevYear = function () {
+        var currentYear = parseInt(yearDisplay.textContent, 10);
+        var activeMonthCell = monthsGrid.querySelector(".month-cell.active");
+        var monthIndex = activeMonthCell ? parseInt(activeMonthCell.dataset.month, 10) : new Date().getMonth();
+        _this2._renderCalendar(monthIndex, currentYear - 1);
+      };
+
+      // Handler for the following year
+      this._handlers.nextYear = function () {
+        var currentYear = parseInt(yearDisplay.textContent, 10);
+        var activeMonthCell = monthsGrid.querySelector(".month-cell.active");
+        var monthIndex = activeMonthCell ? parseInt(activeMonthCell.dataset.month, 10) : new Date().getMonth();
+        _this2._renderCalendar(monthIndex, currentYear + 1);
+      };
+      prevYearBtn.addEventListener("click", this._handlers.prevYear);
+      nextYearBtn.addEventListener("click", this._handlers.nextYear);
+    }
+  }, {
+    key: "_setupDayClickHandler",
+    value: function _setupDayClickHandler(pickerElement) {
+      var _this3 = this;
+      var daysContainer = pickerElement.querySelector(".calendar-wide-days-container");
+      if (!daysContainer) return;
+
+      // Delete previous handler
+      if (this._handlers.dayClick) {
+        daysContainer.removeEventListener("click", this._handlers.dayClick);
+      }
+
+      // Add a new handler
+      this._handlers.dayClick = function (e) {
+        var dayCell = e.target.closest(".calendar-wide-day[data-day]:not(.disabled)");
+        if (!dayCell) return;
+        try {
+          _this3.saveState();
+          var dayValue = parseInt(dayCell.dataset.day, 10);
+          var clickedDate = new Date(dayValue);
+          if (isNaN(clickedDate.getTime())) {
+            return;
+          }
+
+          // Check if this day is already selected
+          var currentDate = _this3.datepicker.getDate();
+          var isDateSelected = currentDate && currentDate.getDate() === clickedDate.getDate() && currentDate.getMonth() === clickedDate.getMonth() && currentDate.getFullYear() === clickedDate.getFullYear();
+          if (isDateSelected) {
+            // Deselect the date
+            _this3.datepicker.setDate({
+              clear: true
+            });
+
+            // Refresh the calendar
+            _this3._refreshMonthNames();
+            var yearDisplay = pickerElement.querySelector(".year-display");
+            if (yearDisplay) {
+              var year = parseInt(yearDisplay.textContent, 10);
+              var monthIndex = _this3._getCurrentlyDisplayedMonth();
+              if (monthIndex !== null) {
+                _this3._renderDaysForSelectedMonth(monthIndex, year);
+              }
+            }
+          } else {
+            // Set a new date
+            _this3.datepicker.setDate(clickedDate);
+
+            // Refresh the calendar
+            _this3._refreshMonthNames();
+            _this3._renderDaysForSelectedMonth(clickedDate.getMonth(), clickedDate.getFullYear());
+          }
+        } catch (err) {
+          console.error("Błąd podczas obsługi kliknięcia kalendarza:", err);
+        }
+      };
+      daysContainer.addEventListener("click", this._handlers.dayClick);
+    }
+  }, {
+    key: "_renderCalendar",
+    value: function _renderCalendar(month, year) {
+      var yearDisplay = this.datepicker.picker.element.querySelector(".year-display");
+      if (yearDisplay) {
+        yearDisplay.textContent = year.toString();
+      }
+      this._refreshMonthNames();
+      this._renderDaysForSelectedMonth(month, year);
+    }
+  }, {
+    key: "_hideStandardCalendarElements",
+    value: function _hideStandardCalendarElements(pickerElement) {
+      if (!pickerElement) return;
+
+      // Hide standard calendar items
+      pickerElement.querySelectorAll(".days, .days-of-week, .view-switch").forEach(function (el) {
+        el.style.display = "none";
+      });
+
+      // Hide element with navigation months
+      var viewSwitch = pickerElement.querySelector(".view-switch");
+      if (viewSwitch && viewSwitch.parentElement) {
+        viewSwitch.parentElement.style.display = "none";
+      }
+
+      // Clear the datepicker controls
+      var datePickerControls = pickerElement.querySelector(".datepicker-controls");
+      if (datePickerControls) {
+        datePickerControls.style.display = "none";
+      }
+    }
+  }, {
+    key: "_renderDaysForSelectedMonth",
+    value: function _renderDaysForSelectedMonth(month, year) {
+      var _this4 = this;
+      var pickerElement = this.datepicker.picker.element;
+      var daysContainer = pickerElement.querySelector(".calendar-wide-days-container");
+      if (!daysContainer) return;
+
+      // Prepare data for the days view
+      var firstDay = new Date(year, month, 1);
+      var lastDay = new Date(year, month + 1, 0);
+      var daysInMonth = lastDay.getDate();
+
+      // Calculate the day of the week for the first day of the month (0 = Sunday, 1 = Monday, etc.).
+      // We will adjust this to start the week from Monday (0 = Monday)
+      var firstDayOfWeek = (firstDay.getDay() + 6) % 7; // Conversion from 0=Sunday to 0=Monday
+
+      // Get the currently selected date and today's date
+      var today = new Date();
+      var currentDate = this.datepicker.getDate();
+
+      // Adding support for minDate and maxDate
+      var minDate = this.datepicker.config.minDate ? new Date(this.datepicker.config.minDate) : null;
+      var maxDate = this.datepicker.config.maxDate ? new Date(this.datepicker.config.maxDate) : null;
+
+      // Get event data from the datepicker configuration
+      var eventData = this.datepicker.config.eventData || [];
+      var daysHTML = [];
+
+      // Add blank cells for days before the first day of the month
+      for (var i = 0; i < firstDayOfWeek; i++) {
+        daysHTML.push("<div class=\"calendar-wide-day empty md:hidden\"></div>");
+      }
+
+      // Rendering of the days of the month
+      var _loop = function _loop() {
+        var date = new Date(year, month, day);
+        var dayValue = date.getTime();
+        var dateStr = "".concat(year, "-").concat(String(month + 1).padStart(2, "0"), "-").concat(String(day).padStart(2, "0"));
+
+        // Check the statuses of the day
+        var isSelected = _this4._isDaySelected(date, currentDate);
+        var isToday = _this4._isToday(date, today);
+        var isDisabled = _this4._isDayDisabled(date, minDate, maxDate);
+        var cellClass = "calendar-wide-day datepicker-cell flex flex-col items-center flex-1 border-0 cursor-pointer text-center font-medium text-base day";
+        if (isDisabled) {
+          cellClass += " disabled cursor-not-allowed";
+        }
+        if (isSelected) {
+          cellClass += " selected";
+        }
+        if (isToday) {
+          cellClass += " today";
+        }
+        var dayNumberClass = "day-number size-[2.625rem] leading-10 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg text-gray-900 dark:text-white";
+        if (isToday && !isSelected) {
+          dayNumberClass += " text-blue-700 !text-primary-700 dark:text-blue-600 dark:!text-primary-600";
+        }
+        if (isDisabled) {
+          dayNumberClass += " text-gray-400 dark:text-gray-500";
+          dayNumberClass = dayNumberClass.replace("hover:bg-gray-100 dark:hover:bg-gray-600", "");
+          dayNumberClass = dayNumberClass.replace("text-gray-900 dark:text-white", "");
+        }
+        if (isSelected) {
+          dayNumberClass += " bg-blue-700 !bg-primary-700 text-white dark:bg-blue-600 dark:!bg-primary-600 dark:text-white";
+          dayNumberClass = dayNumberClass.replace("text-gray-900", "");
+          dayNumberClass = dayNumberClass.replace("hover:bg-gray-100", "");
+          dayNumberClass = dayNumberClass.replace("dark:text-white", "");
+          dayNumberClass = dayNumberClass.replace("dark:hover:bg-gray-600", "");
+        }
+        var eventsHTML = '<span class="day-events opacity-60 gap-0.5 flex flex-row justify-center items-end h-2.5">';
+        if (eventData && eventData.length > 0) {
+          // Filter events for the current day - using dateStr as key
+          var dayEvents = eventData.filter(function (event) {
+            // Check the different date formats that can be used
+            return event.date === dateStr ||
+            // format yyyy-mm-dd
+            event.date === dayValue ||
+            // timestamp
+            event.date === dayValue.toString() // timestamp as string
+            ;
+          });
+
+          // Create a unique list of colors (maximum 5)
+          var uniqueColors = new Set();
+          dayEvents.forEach(function (event) {
+            if (uniqueColors.size < 5) {
+              uniqueColors.add(event.color);
+            }
+          });
+
+          // Generate HTML for event tags
+          if (uniqueColors.size > 0) {
+            Array.from(uniqueColors).forEach(function (color) {
+              eventsHTML += "<span class=\"w-1.5 h-1.5 rounded-3xl bg-".concat(color, "-800 dark:bg-").concat(color, "-600\"></span>");
+            });
+          }
+        }
+        eventsHTML += "</span>";
+        daysHTML.push("<div\n    class=\"".concat(cellClass, "\"\n    data-date=\"").concat(dateStr, "\"\n    data-day=\"").concat(dayValue, "\"\n    ").concat(isDisabled ? "disabled" : 'role="button"', ">\n    <span class=\"").concat(dayNumberClass, "\">").concat(day, "</span>\n    ").concat(eventsHTML, "\n  </div>"));
+      };
+      for (var day = 1; day <= daysInMonth; day++) {
+        _loop();
+      }
+
+      // We specify the number of columns in the grid
+      var gridCols = window.innerWidth >= 768 ? 16 : 7; // 16 columns on larger screens, 7 on smaller screens
+
+      // We calculate how many additional empty cells we need at the end
+      var totalCellsDisplayed = firstDayOfWeek + daysInMonth;
+      var remainingCells = Math.ceil(totalCellsDisplayed / gridCols) * gridCols - totalCellsDisplayed;
+
+      // Add empty cells at the end to fill the grid
+      for (var _i = 0; _i < remainingCells; _i++) {
+        daysHTML.push("<div class=\"calendar-wide-day empty\"></div>");
+      }
+      daysContainer.innerHTML = "<div class=\"calendar-wide-days grid gap-y-3 grid-cols-[repeat(7,1fr)] md:grid-cols-[repeat(16,1fr)]\">".concat(daysHTML.join(""), "</div>");
+    }
+  }, {
+    key: "_isDaySelected",
+    value: function _isDaySelected(date, currentDate) {
+      return currentDate instanceof Date && !isNaN(currentDate.getTime()) && date.getDate() === currentDate.getDate() && date.getMonth() === currentDate.getMonth() && date.getFullYear() === currentDate.getFullYear();
+    }
+  }, {
+    key: "_isToday",
+    value: function _isToday(date, today) {
+      return date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
+    }
+  }, {
+    key: "_isDayDisabled",
+    value: function _isDayDisabled(date, minDate, maxDate) {
+      return minDate && date < minDate || maxDate && date > maxDate;
+    }
+  }, {
+    key: "_getDayCellClasses",
+    value: function _getDayCellClasses(isToday, isSelected, isDisabled) {
+      var cellClass = "datepicker-cell flex flex-col items-center flex-1 border-0 cursor-pointer text-center font-medium text-base day";
+      if (isToday) cellClass += " today";
+      if (isSelected) cellClass += " selected";
+      if (isDisabled) {
+        cellClass += " disabled cursor-not-allowed";
+        cellClass = cellClass.replace("cursor-pointer", "");
+      }
+      return cellClass;
+    }
+  }, {
+    key: "_getCurrentlyDisplayedMonth",
+    value: function _getCurrentlyDisplayedMonth() {
+      // Check the active month in the interface
+      var activeMonthCell = this.datepicker.picker.element.querySelector(".month-cell.active");
+      if (activeMonthCell) {
+        return parseInt(activeMonthCell.dataset.month, 10);
+      }
+
+      // As a last resort, use the current month
+      return new Date().getMonth();
+    }
+  }]);
+}();
+
 function stringifyDates(dates, config) {
   return dates.map(function (dt) {
     return formatDate(dt, config.format, config.locale);
@@ -2517,6 +3070,10 @@ var Datepicker = /*#__PURE__*/function () {
       inputField.value = stringifyDates(this.dates, config);
     }
     var picker = this.picker = new Picker(this);
+    if (this.config.variant === "calendar_wide") {
+      this.wideCalendarStrategy = new CalendarWideStrategy(this);
+      this.wideCalendarStrategy.initialize();
+    }
     if (inline) {
       this.show();
     } else {
