@@ -47,7 +47,7 @@ export default class CalendarWideStrategy {
     if (!pickerElement) return;
 
     const yearDisplay = pickerElement.querySelector(".year-display");
-    const activeMonthCell = pickerElement.querySelector(".month-cell.active");
+    const activeMonthCell = pickerElement.querySelector(".month.active");
 
     if (!yearDisplay || !activeMonthCell) return;
 
@@ -78,7 +78,7 @@ export default class CalendarWideStrategy {
   _createYearNavigation() {
     const yearNavigation = document.createElement("div");
     yearNavigation.className =
-      "flex items-center justify-between mb-2 year-navigation";
+      "flex items-center justify-between mb-2 year-navigation datepicker-controls";
 
     const prevYearBtn = document.createElement("button");
     prevYearBtn.className =
@@ -114,7 +114,7 @@ export default class CalendarWideStrategy {
     for (let i = 0; i < 12; i++) {
       const monthCell = document.createElement("button");
       monthCell.className =
-        "p-2 font-medium text-center text-gray-900 transition-colors rounded-lg month-cell dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600";
+        "flex-1 block text-base font-medium leading-9 text-center text-gray-900 border-0 rounded-lg cursor-pointer datepicker-cell hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white month";
       monthCell.type = "button";
       monthCell.setAttribute("data-month", i);
       monthCell.textContent = `Miesiąc ${i + 1}`;
@@ -127,7 +127,7 @@ export default class CalendarWideStrategy {
   _createDaysContainer() {
     const daysContainer = document.createElement("div");
     daysContainer.className =
-      "w-full pt-8 mt-8 border-t border-gray-200 calendar-wide-days-container dark:border-gray-700";
+      "w-full pt-8 mt-8 border-t border-gray-200 divider calendar-wide-days-container dark:border-gray-700";
     return daysContainer;
   }
 
@@ -137,7 +137,7 @@ export default class CalendarWideStrategy {
     if (!monthsGrid) return;
 
     const monthNames = this._getLocalizedMonthNames();
-    const monthCells = monthsGrid.querySelectorAll(".month-cell");
+    const monthCells = monthsGrid.querySelectorAll(".month");
 
     monthCells.forEach((cell, index) => {
       // Protect against missing month names
@@ -187,31 +187,30 @@ export default class CalendarWideStrategy {
 
   _highlightMonth(monthCells, monthIndex) {
     const baseClasses =
-      "p-2 font-medium text-center rounded-lg month-cell transition-colors";
+      "datepicker-cell hover:bg-gray-100 dark:hover:bg-gray-600 block flex-1 leading-9 border-0 rounded-lg cursor-pointer text-center text-gray-900 dark:text-white font-medium text-base month";
     const activeClasses =
-      "active bg-blue-700 !bg-primary-700 text-white dark:bg-blue-600 dark:!bg-primary-600 dark:text-white";
-    const inactiveClasses =
-      "text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600";
+      "focused bg-blue-700 !bg-primary-700 text-white dark:bg-blue-600 dark:!bg-primary-600 dark:text-white";
 
     monthCells.forEach((cell, index) => {
-      cell.className = baseClasses;
-
       if (index === monthIndex) {
-        cell.className += ` ${activeClasses}`;
+        cell.className = baseClasses.replace(
+          "text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600",
+          ""
+        );
+        cell.classList.add(...activeClasses.split(" "));
+        cell.classList.add("active");
       } else {
-        cell.className += ` ${inactiveClasses}`;
+        cell.className = baseClasses;
       }
     });
   }
 
   _clearMonthHighlight(monthCells) {
     const baseClasses =
-      "p-2 font-medium text-center rounded-lg month-cell transition-colors";
-    const inactiveClasses =
-      "text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600";
+      "datepicker-cell hover:bg-gray-100 dark:hover:bg-gray-600 block flex-1 leading-9 border-0 rounded-lg cursor-pointer text-center text-gray-900 dark:text-white font-medium text-base month";
 
     monthCells.forEach((cell) => {
-      cell.className = `${baseClasses} ${inactiveClasses}`;
+      cell.className = baseClasses;
     });
   }
 
@@ -265,7 +264,7 @@ export default class CalendarWideStrategy {
 
     // Add a new handler
     this._handlers.monthClick = (e) => {
-      const monthCell = e.target.closest(".month-cell");
+      const monthCell = e.target.closest(".month");
       if (!monthCell) return;
 
       e.preventDefault();
@@ -281,10 +280,7 @@ export default class CalendarWideStrategy {
 
       // Update view
       this._renderDaysForSelectedMonth(monthIndex, currentYear);
-      this._highlightMonth(
-        monthsGrid.querySelectorAll(".month-cell"),
-        monthIndex
-      );
+      this._highlightMonth(monthsGrid.querySelectorAll(".month"), monthIndex);
       this.saveState();
     };
 
@@ -310,7 +306,7 @@ export default class CalendarWideStrategy {
     // Handler for the previous year
     this._handlers.prevYear = () => {
       const currentYear = parseInt(yearDisplay.textContent, 10);
-      const activeMonthCell = monthsGrid.querySelector(".month-cell.active");
+      const activeMonthCell = monthsGrid.querySelector(".month.active");
       const monthIndex = activeMonthCell
         ? parseInt(activeMonthCell.dataset.month, 10)
         : new Date().getMonth();
@@ -321,7 +317,7 @@ export default class CalendarWideStrategy {
     // Handler for the following year
     this._handlers.nextYear = () => {
       const currentYear = parseInt(yearDisplay.textContent, 10);
-      const activeMonthCell = monthsGrid.querySelector(".month-cell.active");
+      const activeMonthCell = monthsGrid.querySelector(".month.active");
       const monthIndex = activeMonthCell
         ? parseInt(activeMonthCell.dataset.month, 10)
         : new Date().getMonth();
@@ -631,7 +627,7 @@ export default class CalendarWideStrategy {
   _getCurrentlyDisplayedMonth() {
     // Check the active month in the interface
     const activeMonthCell =
-      this.datepicker.picker.element.querySelector(".month-cell.active");
+      this.datepicker.picker.element.querySelector(".month.active");
     if (activeMonthCell) {
       return parseInt(activeMonthCell.dataset.month, 10);
     }

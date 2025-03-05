@@ -2394,7 +2394,7 @@ var CalendarWideStrategy = /*#__PURE__*/function () {
       var pickerElement = this.datepicker.picker.element;
       if (!pickerElement) return;
       var yearDisplay = pickerElement.querySelector(".year-display");
-      var activeMonthCell = pickerElement.querySelector(".month-cell.active");
+      var activeMonthCell = pickerElement.querySelector(".month.active");
       if (!yearDisplay || !activeMonthCell) return;
       var state = {
         year: parseInt(yearDisplay.textContent, 10),
@@ -2420,7 +2420,7 @@ var CalendarWideStrategy = /*#__PURE__*/function () {
     key: "_createYearNavigation",
     value: function _createYearNavigation() {
       var yearNavigation = document.createElement("div");
-      yearNavigation.className = "flex items-center justify-between mb-2 year-navigation";
+      yearNavigation.className = "flex items-center justify-between mb-2 year-navigation datepicker-controls";
       var prevYearBtn = document.createElement("button");
       prevYearBtn.className = "bg-white dark:bg-gray-700 rounded-lg text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white text-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-gray-200 prev-year-btn size-11 grid place-items-center";
       prevYearBtn.type = "button";
@@ -2444,7 +2444,7 @@ var CalendarWideStrategy = /*#__PURE__*/function () {
       monthsGrid.className = "grid grid-cols-4 gap-2 sm:grid-cols-6 md:grid-cols-12 months-grid";
       for (var i = 0; i < 12; i++) {
         var monthCell = document.createElement("button");
-        monthCell.className = "p-2 font-medium text-center text-gray-900 transition-colors rounded-lg month-cell dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600";
+        monthCell.className = "flex-1 block text-base font-medium leading-9 text-center text-gray-900 border-0 rounded-lg cursor-pointer datepicker-cell hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white month";
         monthCell.type = "button";
         monthCell.setAttribute("data-month", i);
         monthCell.textContent = "Miesi\u0105c ".concat(i + 1);
@@ -2456,7 +2456,7 @@ var CalendarWideStrategy = /*#__PURE__*/function () {
     key: "_createDaysContainer",
     value: function _createDaysContainer() {
       var daysContainer = document.createElement("div");
-      daysContainer.className = "w-full pt-8 mt-8 border-t border-gray-200 calendar-wide-days-container dark:border-gray-700";
+      daysContainer.className = "w-full pt-8 mt-8 border-t border-gray-200 divider calendar-wide-days-container dark:border-gray-700";
       return daysContainer;
     }
   }, {
@@ -2466,7 +2466,7 @@ var CalendarWideStrategy = /*#__PURE__*/function () {
       var monthsGrid = pickerElement.querySelector(".months-grid");
       if (!monthsGrid) return;
       var monthNames = this._getLocalizedMonthNames();
-      var monthCells = monthsGrid.querySelectorAll(".month-cell");
+      var monthCells = monthsGrid.querySelectorAll(".month");
       monthCells.forEach(function (cell, index) {
         // Protect against missing month names
         cell.textContent = monthNames[index] || "";
@@ -2514,25 +2514,25 @@ var CalendarWideStrategy = /*#__PURE__*/function () {
   }, {
     key: "_highlightMonth",
     value: function _highlightMonth(monthCells, monthIndex) {
-      var baseClasses = "p-2 font-medium text-center rounded-lg month-cell transition-colors";
-      var activeClasses = "active bg-blue-700 !bg-primary-700 text-white dark:bg-blue-600 dark:!bg-primary-600 dark:text-white";
-      var inactiveClasses = "text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600";
+      var baseClasses = "datepicker-cell hover:bg-gray-100 dark:hover:bg-gray-600 block flex-1 leading-9 border-0 rounded-lg cursor-pointer text-center text-gray-900 dark:text-white font-medium text-base month";
+      var activeClasses = "focused bg-blue-700 !bg-primary-700 text-white dark:bg-blue-600 dark:!bg-primary-600 dark:text-white";
       monthCells.forEach(function (cell, index) {
-        cell.className = baseClasses;
         if (index === monthIndex) {
-          cell.className += " ".concat(activeClasses);
+          var _cell$classList;
+          cell.className = baseClasses.replace("text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600", "");
+          (_cell$classList = cell.classList).add.apply(_cell$classList, _toConsumableArray(activeClasses.split(" ")));
+          cell.classList.add("active");
         } else {
-          cell.className += " ".concat(inactiveClasses);
+          cell.className = baseClasses;
         }
       });
     }
   }, {
     key: "_clearMonthHighlight",
     value: function _clearMonthHighlight(monthCells) {
-      var baseClasses = "p-2 font-medium text-center rounded-lg month-cell transition-colors";
-      var inactiveClasses = "text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600";
+      var baseClasses = "datepicker-cell hover:bg-gray-100 dark:hover:bg-gray-600 block flex-1 leading-9 border-0 rounded-lg cursor-pointer text-center text-gray-900 dark:text-white font-medium text-base month";
       monthCells.forEach(function (cell) {
-        cell.className = "".concat(baseClasses, " ").concat(inactiveClasses);
+        cell.className = baseClasses;
       });
     }
   }, {
@@ -2585,7 +2585,7 @@ var CalendarWideStrategy = /*#__PURE__*/function () {
 
       // Add a new handler
       this._handlers.monthClick = function (e) {
-        var monthCell = e.target.closest(".month-cell");
+        var monthCell = e.target.closest(".month");
         if (!monthCell) return;
         e.preventDefault();
         e.stopPropagation();
@@ -2596,7 +2596,7 @@ var CalendarWideStrategy = /*#__PURE__*/function () {
 
         // Update view
         _this._renderDaysForSelectedMonth(monthIndex, currentYear);
-        _this._highlightMonth(monthsGrid.querySelectorAll(".month-cell"), monthIndex);
+        _this._highlightMonth(monthsGrid.querySelectorAll(".month"), monthIndex);
         _this.saveState();
       };
       monthsGrid.addEventListener("click", this._handlers.monthClick);
@@ -2622,7 +2622,7 @@ var CalendarWideStrategy = /*#__PURE__*/function () {
       // Handler for the previous year
       this._handlers.prevYear = function () {
         var currentYear = parseInt(yearDisplay.textContent, 10);
-        var activeMonthCell = monthsGrid.querySelector(".month-cell.active");
+        var activeMonthCell = monthsGrid.querySelector(".month.active");
         var monthIndex = activeMonthCell ? parseInt(activeMonthCell.dataset.month, 10) : new Date().getMonth();
         _this2._renderCalendar(monthIndex, currentYear - 1);
       };
@@ -2630,7 +2630,7 @@ var CalendarWideStrategy = /*#__PURE__*/function () {
       // Handler for the following year
       this._handlers.nextYear = function () {
         var currentYear = parseInt(yearDisplay.textContent, 10);
-        var activeMonthCell = monthsGrid.querySelector(".month-cell.active");
+        var activeMonthCell = monthsGrid.querySelector(".month.active");
         var monthIndex = activeMonthCell ? parseInt(activeMonthCell.dataset.month, 10) : new Date().getMonth();
         _this2._renderCalendar(monthIndex, currentYear + 1);
       };
@@ -2875,7 +2875,7 @@ var CalendarWideStrategy = /*#__PURE__*/function () {
     key: "_getCurrentlyDisplayedMonth",
     value: function _getCurrentlyDisplayedMonth() {
       // Check the active month in the interface
-      var activeMonthCell = this.datepicker.picker.element.querySelector(".month-cell.active");
+      var activeMonthCell = this.datepicker.picker.element.querySelector(".month.active");
       if (activeMonthCell) {
         return parseInt(activeMonthCell.dataset.month, 10);
       }
