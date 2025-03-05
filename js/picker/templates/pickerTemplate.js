@@ -1,8 +1,6 @@
 import { optimizeTemplateHTML } from "../../lib/utils.js";
 
 export default function pickerTemplate(config) {
-  console.log(config.variant);
-
   return optimizeTemplateHTML(`<div class="datepicker hidden">
   <div class="datepicker-picker block rounded-lg bg-white dark:bg-gray-700 p-4 w-full max-w-[23.375rem] ${config.variant === 'calendar_default' ? 'mx-auto' : 'max-w-full'}">
     <div class="datepicker-header">
