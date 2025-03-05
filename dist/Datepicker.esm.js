@@ -2345,8 +2345,7 @@ function onClickOutside(datepicker, ev) {
 }
 
 /**
- * Strategia dla wariantu calendar_wide.
- * Odpowiada za wszystkie aspekty wyświetlania i zachowania szerokiego kalendarza.
+ * Responsible for all aspects of the display and behavior of the calendar wide.
  */
 var CalendarWideStrategy = /*#__PURE__*/function () {
   function CalendarWideStrategy(datepicker) {

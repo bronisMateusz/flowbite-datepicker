@@ -1,6 +1,5 @@
 /**
- * Strategia dla wariantu calendar_wide.
- * Odpowiada za wszystkie aspekty wyświetlania i zachowania szerokiego kalendarza.
+ * Responsible for all aspects of the display and behavior of the calendar wide.
  */
 export default class CalendarWideStrategy {
   constructor(datepicker) {
@@ -389,11 +388,11 @@ export default class CalendarWideStrategy {
           this.datepicker.setDate(clickedDate);
 
           // Refresh the calendar
-            this._refreshMonthNames();
-            this._renderDaysForSelectedMonth(
-              clickedDate.getMonth(),
-              clickedDate.getFullYear()
-            );
+          this._refreshMonthNames();
+          this._renderDaysForSelectedMonth(
+            clickedDate.getMonth(),
+            clickedDate.getFullYear()
+          );
         }
       } catch (err) {
         console.error("Błąd podczas obsługi kliknięcia kalendarza:", err);
